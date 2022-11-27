@@ -1,5 +1,7 @@
 package utils
 
+import "fmt"
+
 const Base62 uint64 = 62
 
 var (
@@ -13,6 +15,7 @@ var (
 )
 
 func init() {
+	fmt.Println("this is the init function without calling")
 	defaultLookup = make(map[rune]int, Base62)
 	for i, v := range DEFAULT_CHARS {
 		defaultLookup[v] = i
