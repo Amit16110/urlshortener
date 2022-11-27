@@ -10,12 +10,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type user struct {
+	id    uint64
+	url   string
+	email string
+}
+
+var store map[string]user
+
 func hashGenerators() uint64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return r.Uint64()
 }
 
 func (s *Server) urlshortener(c *gin.Context) {
+	store = make(map[string]user)
 	var request struct {
 		Name  string `json:"name"`
 		Email string `json:"email"`
@@ -31,6 +40,12 @@ func (s *Server) urlshortener(c *gin.Context) {
 
 	shortUrl := utils.Encode(id)
 
+	users := user{id: id, email: request.Email, url: request.Url}
+
+	store[shortUrl] = users
+
+	fmt.Println("after", store[shortUrl].email)
+
 	c.JSON(http.StatusOK, gin.H{
 		"id":         id,
 		"name":       request.Name,
@@ -38,4 +53,11 @@ func (s *Server) urlshortener(c *gin.Context) {
 		"created_at": time.Now().UTC(),
 	})
 
+}
+
+func (s *Server) shortUrlRedirect(c *gin.Context) {
+	sUrl := c.Param("shortUrl")
+	val := store[sUrl]
+
+	c.Redirect(302, val.url)
 }

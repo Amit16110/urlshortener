@@ -10,6 +10,6 @@ func (s *Server) Router() *gin.Engine {
 	router := gin.Default()
 
 	router.POST("/urlshort", s.urlshortener)
-
+	router.GET("/:shortUrl", s.shortUrlRedirect)
 	return router
 }
