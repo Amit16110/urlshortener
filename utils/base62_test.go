@@ -2,17 +2,20 @@ package utils
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestBase62(t *testing.T) {
+	var value uint64 = 642557611423047429
 
-	// 642557611423047429 ub4EELBXnk
-	hash := Encode(642557611423047429)
+	//  ub4EELBXnk
+	hash := Encode(value)
 	result := Decode(hash)
 
-	requires.NotEmpty(hash)
-	requires.NotEmpty(result)
+	require.NotEmpty(t, hash)
+	require.NotEmpty(t, result)
 
-	requires.Equal(result, 642557611423047429)
-	requires.Equal(hash, "ub4EELBXnk")
+	require.Equal(t, result, value)
+	require.Equal(t, hash, "ub4EELBXnk")
 }

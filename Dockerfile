@@ -12,4 +12,6 @@ FROM alpine
 WORKDIR /app
 COPY --from=builder /app/url_shortener /app
 
+EXPOSE 8080
+
 CMD [ "./url_shortener" ]
