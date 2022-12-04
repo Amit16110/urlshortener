@@ -16,7 +16,7 @@ type user struct {
 	email string
 }
 
-var store map[string]user
+var store = make(map[string]user)
 
 func hashGenerators() uint64 {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -24,7 +24,7 @@ func hashGenerators() uint64 {
 }
 
 func (s *Server) urlshortener(c *gin.Context) {
-	store = make(map[string]user)
+
 	var request struct {
 		Name  string `json:"name"`
 		Email string `json:"email"`
@@ -42,10 +42,20 @@ func (s *Server) urlshortener(c *gin.Context) {
 
 	users := user{id: id, email: request.Email, url: request.Url}
 
-	store[shortUrl] = users
+	fmt.Println("store", store)
+	// }
 
-	fmt.Println("after", store[shortUrl].email)
-
+	if len(store) == 0 {
+		store[shortUrl] = users
+	} else {
+		for i, v := range store {
+			if v.url == request.Url {
+				shortUrl = i
+				id = v.id
+			}
+		}
+	}
+	fmt.Println("data====>", store)
 	c.JSON(http.StatusOK, gin.H{
 		"id":         id,
 		"name":       request.Name,

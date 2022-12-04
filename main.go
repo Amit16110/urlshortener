@@ -11,7 +11,7 @@ func main() {
 
 	start := server.Router()
 
-	err := start.Run(":8080")
+	err := start.Run(":8081")
 	if err != nil {
 		panic(fmt.Sprintf("Failed to start the server - Error: %v", err))
 	}
